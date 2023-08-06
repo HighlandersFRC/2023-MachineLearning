@@ -14,4 +14,4 @@ def convert(self, video, start_num):
         frame += 1
 
 if __name__ == "__main__":
-    convert("./842023428.avi", 365)
+    convert("./capture.avi", 0)
