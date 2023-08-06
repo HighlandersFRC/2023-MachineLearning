@@ -50,7 +50,14 @@ Record video from the Limelight stream and write it to an *.avi* file:
 ffmpeg -f mjpeg -r 5 -i "http://limelight.local:5802/stream.mjpeg?fps=10" -r 10 ./capture.avi
 ```
 
-
+Capture frames from the *.avi* file to use as training data. Default step size of 5 frames. Use multiple times with offset number arguments (-n) to avoid over-writing other files if capturing from multiple *.avi* files.
+```
+python image_capture.py -n 0 capture1.avi images/
+```
+*Creates 0.jpg-92.jpg*
+```
+python image_capture.py -n 93 capture1
+```
 
 ## Resources
 [Limelight Access](https://www.chiefdelphi.com/t/roslight-ros-on-the-limelight-2/366263)  
