@@ -43,7 +43,7 @@ Re-zip the *.img* file and flash the Limelight like normal. Upon boot, the Limel
 
 ## Data Collection and Labeling
 
-Machine learning models need lots of varied training data in order to perform reliably. When gathering data be sure to vary factors like lighting conditions, camera input settings, angles, distances, and positions in frame.
+Machine learning models need lots of varied training data in order to perform reliably. When gathering data be sure to vary factors like lighting conditions, camera input settings, backgrounds, angles, distances, and positions in frame.
 
 Record video from the Limelight stream and write it to an *.avi* file:
 ```
@@ -58,8 +58,18 @@ python image_capture.py -n 0 capture1.avi images/
 ```
 python image_capture.py -n 93 capture1
 ```
+*Creates new files starting at 93.jpg*
+
+[MakeSense](https://www.makesense.ai/) is recommended for image labeling as it is efficient, free, and exports to the desired format (VOC XML). After uploading all the training images select the desired model type (further instructions here will cover training an Object Detection model).
+
+After creating the different object classes and labeling the data, under Actions select export labels and select to export in the VOC XML format. Unzip the resulting file and copy the XML files and corresponding images into the same folder. All images must have an XML label, so discard any images without one.
+
+To train a model on the labeled data, go to the [Object Detection Training Colab](https://colab.research.google.com/github/EdjeElectronics/TensorFlow-Lite-Object-Detection-on-Android-and-Raspberry-Pi/blob/master/Train_TFLite2_Object_Detction_Model.ipynb#scrollTo=dYVVlv5QUUZF) and follow the instructions there.
+
+After completing the colab, unzip the resulting file and find the model named *"edgetpu.tflite"*. This is the model file that you will upload to the Limelight, along with *"labelmap.txt"*.
 
 ## Resources
 [Limelight Access](https://www.chiefdelphi.com/t/roslight-ros-on-the-limelight-2/366263)  
 [FFMPEG Recording](https://mjpg-streamer.inlab.net/manual/useful-commands/record-mjpg-stream-with-ffmpeg/)  
 [Image Labeling](https://www.makesense.ai/)  
+[Object Detection Model Training](https://colab.research.google.com/github/EdjeElectronics/TensorFlow-Lite-Object-Detection-on-Android-and-Raspberry-Pi/blob/master/Train_TFLite2_Object_Detction_Model.ipynb#scrollTo=dYVVlv5QUUZF)  
