@@ -69,7 +69,14 @@ To train a model on the labeled data, go to the [Object Detection Training Colab
 After completing the colab, unzip the resulting file and find the model named *"edgetpu.tflite"*. This is the model file that you will upload to the Limelight, along with *"labelmap.txt"*.
 
 ## Resources
+
+### Guides and Services
+
 [Limelight Access](https://www.chiefdelphi.com/t/roslight-ros-on-the-limelight-2/366263)  
 [FFMPEG Recording](https://mjpg-streamer.inlab.net/manual/useful-commands/record-mjpg-stream-with-ffmpeg/)  
 [Image Labeling](https://www.makesense.ai/)  
 [Object Detection Model Training](https://colab.research.google.com/github/EdjeElectronics/TensorFlow-Lite-Object-Detection-on-Android-and-Raspberry-Pi/blob/master/Train_TFLite2_Object_Detction_Model.ipynb#scrollTo=dYVVlv5QUUZF)  
+
+### Files
+
+[2023 Chezy Dataset](https://drive.google.com/drive/folders/1L-OjiJ-La8W9uXUiCTWJ8Xt6VuDw_tsE?usp=sharing)
