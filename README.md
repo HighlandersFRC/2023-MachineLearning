@@ -10,6 +10,8 @@ In order to access the Limelight via ssh, a firmware image with a modified passw
 
 Download and unzip the desired [Limelight firmware image](https://limelightvision.io/pages/downloads) and navigate to the directory containing the *.img* file in WSL or a Linux shell.
 
+Or use an already made [root access Limelight image](https://drive.google.com/drive/folders/1wUgtF0c072AwEy9fcuHq4qYtK_6V73uf?usp=sharing).
+
 Install and use binwalk to locate the main filesystem inside the image file:
 ```
 sudo apt-get install binwalk
