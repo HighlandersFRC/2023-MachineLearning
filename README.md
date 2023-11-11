@@ -49,7 +49,7 @@ Machine learning models need lots of varied training data in order to perform re
 
 Record video from the Limelight stream and write it to an *.avi* file:
 ```
-ffmpeg -f mjpeg -r 5 -i "http://limelight.local:5802/stream.mjpeg?fps=10" -r 10 ./capture.avi
+ffmpeg -f mjpeg -r 5 -i "http://limelight.local:5802/stream.mjpeg?fps=10" -r 10 -q:v 1 ./capture.avi
 ```
 
 Capture frames from the *.avi* file to use as training data. Default step size of 5 frames. Use multiple times with offset number arguments (-n) to avoid over-writing other files if capturing from multiple *.avi* files.
