@@ -66,7 +66,7 @@ python image_capture.py -n 93 capture1
 
 After creating the different object classes and labeling the data, under Actions select export labels and select to export in the VOC XML format. Unzip the resulting file and copy the XML files and corresponding images into the same folder. All images must have an XML label, so discard any images without one.
 
-##Model Creation
+## Model Creation
 
 To train a model on Google Colab, go to the [Object Detection Training Colab](https://colab.research.google.com/github/EdjeElectronics/TensorFlow-Lite-Object-Detection-on-Android-and-Raspberry-Pi/blob/master/Train_TFLite2_Object_Detction_Model.ipynb#scrollTo=dYVVlv5QUUZF) and follow the instructions there. After completing the colab, unzip the resulting file and find the model named *"edgetpu.tflite"*. This is the model file that you will upload to the Limelight, along with *"labelmap.txt"*.
 
@@ -225,6 +225,17 @@ Run the training (40000 steps is recommended. More steps increase training time 
 If running into OOM (Out Of Memory) errors, half the value of `batch_size` in /content/models/mymodels/pipeline_file.config until the error goes away.
 ```
 python /content/models/research/object_detection/model_main_tf2.py --pipeline_config_path=/content/models/mymodel/pipeline_file.config --model_dir=/content/training/ --alsologtostderr --num_train_steps=40000 --sample_1_of_n_eval_examples=1
+```
+
+Create export directory and export model.
+```
+mkdir /content/custom_model_lite
+python /content/models/research/object_detection/export_tflite_graph_tf2.py --trained_checkpoint_dir /content/training --output_directory /content/custom_model_lite --pipeline_config_path /content/models/mymodel/pipeline_file.config
+```
+
+Copy over lite_converter to /content and run to convert model to tflite.
+```
+python lite_converter
 ```
 
 ## Resources
