@@ -203,6 +203,22 @@ python create_tfrecord.py --csv_input=images/train_labels.csv --labelmap=labelma
 python create_tfrecord.py --csv_input=images/validation_labels.csv --labelmap=labelmap.txt --image_dir=images/validation --output_path=val.tfrecord
 ```
 
+Copy get_config_info.py to /content, configure chosen_model ('ssd-mobilenet-v2-fpnlite-320' for limelight use), and get download urls.
+```
+python get_config_info.py
+```
+
+Create mymodel directory and download tar and config files.
+```
+mkdir /content/models/mymodel/
+cd /content/models/mymodel/
+wget http://download.tensorflow.org/models/object_detection/tf2/20200711/${pretrained_checkpoints}
+wget https://raw.githubusercontent.com/tensorflow/models/master/research/object_detection/configs/tf2/${base_pipeline_file}
+tar -xvzf ${pretrained_checkpoint}
+```
+
+
+
 ## Resources
 
 ### Guides and Services
