@@ -217,7 +217,15 @@ wget https://raw.githubusercontent.com/tensorflow/models/master/research/object_
 tar -xvzf ${pretrained_checkpoint}
 ```
 
+To edit the pipeline config file, run the code in the [Colab](https://colab.research.google.com/github/EdjeElectronics/TensorFlow-Lite-Object-Detection-on-Android-and-Raspberry-Pi/blob/master/Train_TFLite2_Object_Detction_Model.ipynb#scrollTo=dYVVlv5QUUZF) until "(Optional) If you're curious, you can display the configuration file's contents here in the browser by running the line of code below." Run the cell and copy the printed output to the /content/models/mymodels/${base_pipeline_file} and rename it to `pipeline_file.config`.
 
+Set Tensorflow to use GPU for training by editing /content/models/research/object_detection/model_main_tf2.py and replacing lines 99-102 with `strategy = tf.distribute.OneDeviceStrategy(device = "/gpu:0")`.
+
+Run the training (40000 steps is recommended. More steps increase training time and produce diminishing returns, less steps decrease training time but might not fine tune model as well. On the Jetson AGX Orin 32GB training ran at a speed of ~0.4 sec/step and took ~4.5 hours to complete). 
+If running into OOM (Out Of Memory) errors, half the value of `batch_size` in /content/models/mymodels/pipeline_file.config until the error goes away.
+```
+python /content/models/research/object_detection/model_main_tf2.py --pipeline_config_path=/content/models/mymodel/pipeline_file.config --model_dir=/content/training/ --alsologtostderr --num_train_steps=40000 --sample_1_of_n_eval_examples=1
+```
 
 ## Resources
 
