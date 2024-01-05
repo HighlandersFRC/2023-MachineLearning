@@ -66,9 +66,80 @@ python image_capture.py -n 93 capture1
 
 After creating the different object classes and labeling the data, under Actions select export labels and select to export in the VOC XML format. Unzip the resulting file and copy the XML files and corresponding images into the same folder. All images must have an XML label, so discard any images without one.
 
-To train a model on the labeled data, go to the [Object Detection Training Colab](https://colab.research.google.com/github/EdjeElectronics/TensorFlow-Lite-Object-Detection-on-Android-and-Raspberry-Pi/blob/master/Train_TFLite2_Object_Detction_Model.ipynb#scrollTo=dYVVlv5QUUZF) and follow the instructions there.
+##Model Creation
 
-After completing the colab, unzip the resulting file and find the model named *"edgetpu.tflite"*. This is the model file that you will upload to the Limelight, along with *"labelmap.txt"*.
+To train a model on Google Colab, go to the [Object Detection Training Colab](https://colab.research.google.com/github/EdjeElectronics/TensorFlow-Lite-Object-Detection-on-Android-and-Raspberry-Pi/blob/master/Train_TFLite2_Object_Detction_Model.ipynb#scrollTo=dYVVlv5QUUZF) and follow the instructions there. After completing the colab, unzip the resulting file and find the model named *"edgetpu.tflite"*. This is the model file that you will upload to the Limelight, along with *"labelmap.txt"*.
+
+To train a model on NVIDIA Jetson device (been tested on Jetson AGX Orin only), follow the below instructions.
+
+Flash Jetson device with [JetPack](https://developer.nvidia.com/embedded/jetpack) 6.0DP. After finding the Jetson devices's IP address, connect via SSH (VSCode can connect via SSH too, which is very useful for moving and editing files on the Jetson device).
+
+Verify that python and pip are both using the same version, 3.10.2.
+```
+python --version
+pip --version
+```
+
+Install python virtual environment.
+```
+sudo apt-get install python3-venv
+```
+
+Create the workspace directory and activate the virtual environment.
+```
+sudo mkdir /content
+sudo chmod 777 /content
+python -m venv /content/object-detection-env
+cd /content
+source /object-detection-env/bin/activate
+```
+
+Clone the Tensorflow models repo.
+```
+git clone --depth 1 https://github.com/tensorflow/models
+```
+
+Install protobuf-compiler of right version.
+```
+sudo apt-get install protobuf-compiler<3.20.*
+pip uninstall protobuf
+pip install protobuf<3.20.*
+protoc --version
+pip freeze | grep protobuf
+```
+
+Use protobuf to compile .protos.
+```
+cd /content/models/research
+protoc object_detection/protos/*.proto --python_out=.
+```
+
+Install major dependencies.
+```
+pip install pyyaml
+cp /content/models/research/* /content/object-detection-env/lib/python3.10/site-packages/
+cp /content/models/official /content/object-detection-env/lib/python3.10/site-packages/
+pip install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v60dp tensorflow==2.14.0+nv23.11
+pip install tensorflow_io
+```
+
+Install CUDA and cuDNN.
+
+Add CUDA to path.
+```
+export PATH=${PATH}:/usr/local/cuda/bin
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/cuda/lib64
+```
+
+If there is a previous installation (check via `nvcc -V`), uninstall.
+```
+sudo apt-get --purge remove cuda
+sudo apt-get autoremove
+sudo rm -r /usr/local/cuda
+sudo rm -r /usr/local/cuda-*
+```
+
+Install CUDA using the directions found [here](https://developer.nvidia.com/cuda-12-2-2-download-archive?target_os=Linux&target_arch=aarch64-jetson&Compilation=Native&Distribution=Ubuntu&target_version=20.04&target_type=deb_local).
 
 ## Resources
 
