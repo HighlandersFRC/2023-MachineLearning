@@ -233,10 +233,36 @@ mkdir /content/custom_model_lite
 python /content/models/research/object_detection/export_tflite_graph_tf2.py --trained_checkpoint_dir /content/training --output_directory /content/custom_model_lite --pipeline_config_path /content/models/mymodel/pipeline_file.config
 ```
 
-Copy over lite_converter to /content and run to convert model to tflite.
+Copy over lite_converter.py to /content and run to convert model to tflite.
 ```
-python lite_converter
+python lite_converter.py
 ```
+
+Copy over quantize.py to /content and run to quantize the tflite model.
+```
+python quantize.py
+```
+
+## EdgeTPU Compilation
+(Necessary for Limelight w/ Google Coral)
+Download /content/custom_model_lite/detect_quant.tflite to your local system as the EdgeTPU compiler is not available on Jetson devices.
+
+Locally, either in native Linux or WSL, install edgetpu-compiler.
+```
+sudo apt-get install edgetpu-compiler
+```
+
+In the same directory as detect_quant.tflite, compile using the EdgeTPU compiler.
+```
+edgetpu_compiler detect_quant.tflite
+```
+
+Optionally remove the compiler log created.
+```
+rm detect_quant_edgetpu.log
+```
+
+`detect_quant_edgetpu.tflite` is ready to be deployed.
 
 ## Resources
 
