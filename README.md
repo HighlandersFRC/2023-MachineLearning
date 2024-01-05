@@ -101,6 +101,8 @@ git clone --depth 1 https://github.com/tensorflow/models
 
 Install protobuf-compiler of right version.
 ```
+sudo apt-get update
+sudo apt-get upgrade
 sudo apt-get install protobuf-compiler<3.20.*
 pip uninstall protobuf
 pip install protobuf<3.20.*
@@ -140,6 +142,66 @@ sudo rm -r /usr/local/cuda-*
 ```
 
 Install CUDA using the directions found [here](https://developer.nvidia.com/cuda-12-2-2-download-archive?target_os=Linux&target_arch=aarch64-jetson&Compilation=Native&Distribution=Ubuntu&target_version=20.04&target_type=deb_local).
+
+Install cuDNN.
+```
+sudo apt-get remove libcudnn8
+sudo apt-get remove libcudnn8-dev
+sudo apt-get remove libcudnn8-samples
+sudo apt-get install libcudnn8=8.9.0.84-1+cuda12.2
+sudo apt-get install libcudnn8-dev=8.9.0.84-1+cuda12.2
+sudo apt-get install libcudnn8-samples=8.9.0.84-1+cuda12.2
+```
+
+Run the model builder test. Use `pip install *` to install any modules not being found.
+
+Verify that Tensorflow is configured correctly and recognizes the GPU.
+```
+python
+import tensorflow as tf
+print(f'Logical Devices: {tf.config.list_logical_devices()}')
+print(f'Physical Devices: {tf.config.list_physical_devices()}')
+print(f'CUDA Support: {tf.test.is_built_with_cuda()}')
+print(f'GPU Support: {tf.test.is_built_with_gpu_support()}')
+print(f'TF Version: {tf.version.VERSION}')
+```
+Should output something like this (ignore ):
+```
+Logical Devices: [LogicalDevice(name='/device:CPU:0', device_type='CPU'), LogicalDevice(name='/device:GPU:0', device_type='GPU')]
+Physical Devices: [PhysicalDevice(name='/physical_device:CPU:0', device_type='CPU'), LogicalDevice(name='/physical_device:GPU:0', device_type='GPU')]
+CUDA Support: true
+GPU Support: true
+TF Version: 2.14.0
+```
+
+Upload `images.zip` via SSH to the Jetson device in /content.
+
+Set up images.
+```
+cd /content
+mkdir /content/images
+unzip -q images.zip -d /content/images/all
+mkdir /content/images/train; mkdir /content/images/validation; mkdir /content/images/test
+wget https://raw.githubusercontent.com/EdjeElectronics/TensorFlow-Lite-Object-Detection-on-Android-and-Raspberry-Pi/master/util_scripts/train_val_test_split.py
+python train_val_test_split.py
+```
+
+Create file label map.
+```
+cat <<EOF >> /content/labelmap.txt
+${class_1}
+${class_2}
+EOF
+```
+
+Create .csv and .tfrecord files.
+```
+wget https://raw.githubusercontent.com/EdjeElectronics/TensorFlow-Lite-Object-Detection-on-Android-and-Raspberry-Pi/master/util_scripts/create_csv.py
+wget https://raw.githubusercontent.com/EdjeElectronics/TensorFlow-Lite-Object-Detection-on-Android-and-Raspberry-Pi/master/util_scripts/create_tfrecord.py
+python create_csv.py
+python create_tfrecord.py --csv_input=images/train_labels.csv --labelmap=labelmap.txt --image_dir=images/train --output_path=train.tfrecord
+python create_tfrecord.py --csv_input=images/validation_labels.csv --labelmap=labelmap.txt --image_dir=images/validation --output_path=val.tfrecord
+```
 
 ## Resources
 
