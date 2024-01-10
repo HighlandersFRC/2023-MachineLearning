@@ -64,7 +64,13 @@ python image_capture.py -n 93 capture1
 
 [MakeSense](https://www.makesense.ai/) is recommended for image labeling as it is efficient, free, and exports to the desired format (VOC XML). After uploading all the training images select the desired model type (further instructions here will cover training an Object Detection model).
 
-After creating the different object classes and labeling the data, under Actions select export labels and select to export in the VOC XML format. Unzip the resulting file and copy the XML files and corresponding images into the same folder. All images must have an XML label, so discard any images without one.
+After creating the different object classes and labeling the data, under "Actions" select "Export Labels" and select to export in the "VOC XML" format. Unzip the resulting file and copy the XML files and corresponding images into the same folder. All images must have an XML label, so discard any images without one.
+
+### Tips for Image Labeling
+
+Only label an object in frame when it is reasonably distinguishable. Labeling objects that are partially obstructed but still recognizable is fine, and can actually really help the final network detect partially obstructed objects. However, do not label objects that are obstructed to the point where they could reasonably be confused for something else.
+
+Make sure that each edge of every label rectangle is close to edge of the object. This helps improve the consistency of training data and results in better detection models.
 
 ## Model Creation
 
